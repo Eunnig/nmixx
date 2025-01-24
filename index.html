@@ -1,0 +1,131 @@
+<div class="container">
+  <div class="overlay"></div>
+  <div class="card"></div>
+</div>
+
+<audio id="background-music" loop>
+  <source src="nmixx.mp3" type="audio/mpeg">
+ 니 브라우저 노래 재생 안되잖슴;;
+</audio>
+<button id="music-control" style="margin-top: 20px;">음악 재생</button>
+
+<script>
+  var container = document.querySelector('.container');
+  var overlay = document.querySelector('.overlay');
+  var music = document.getElementById('background-music'); 
+  var musicControl = document.getElementById('music-control'); 
+
+  
+  function updateCardEffect(x, y) {
+    var rect = container.getBoundingClientRect();
+    var width = rect.width;
+    var height = rect.height;
+
+    var rotateY = -1 / 5 * x + 20;
+    var rotateX = 4 / 30 * y - 20;
+
+    // 흰색 조명
+    overlay.style = `
+      background: radial-gradient(circle at ${x}px ${y}px, rgba(255, 255, 255, 0.6), transparent 60%);
+      filter: brightness(1.2);
+    `;
+
+    container.style = `
+      transform: perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg);
+    `;
+  }
+
+  // 기존 마우스 상호작용
+  container.addEventListener('mousemove', function (e) {
+    var rect = container.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    var y = e.clientY - rect.top;
+    updateCardEffect(x, y);
+  });
+
+  // 모바일 터치 상호작용
+  container.addEventListener('touchmove', function (e) {
+    var rect = container.getBoundingClientRect();
+    var touch = e.touches[0];
+    var x = touch.clientX - rect.left;
+    var y = touch.clientY - rect.top;
+    updateCardEffect(x, y);
+  });
+
+  function resetCardEffect() {
+    overlay.style = 'background: none;';
+    container.style = 'transform: perspective(350px) rotateY(0deg) rotateX(0deg)';
+  }
+
+  container.addEventListener('mouseout', resetCardEffect);
+  container.addEventListener('touchend', resetCardEffect);
+
+  // 음악 
+  var isPlaying = false;
+  musicControl.addEventListener('click', function () {
+    if (isPlaying) {
+      music.pause();
+      musicControl.textContent = '음악 재생';
+    } else {
+      music.play();
+      musicControl.textContent = '멈추기';
+    }
+    isPlaying = !isPlaying;
+  });
+</script>
+
+<style>
+  .container {
+    width: 220px;
+    height: 310px;
+    transition: all 0.1s;
+    position: relative;
+    touch-action: none; 
+  }
+  .overlay {
+    position: absolute;
+    width: 220px;
+    height: 310px;
+    background: none; 
+    transition: all 0.1s;
+    pointer-events: none; 
+  }
+  .card {
+    width: 220px;
+    height: 310px;
+    background-image: url(dsdsd.jpg);
+    background-size: cover;
+  }
+
+  
+  @media (max-width: 768px) {
+    .container {
+      width: 300px; /* 모바일 전용 크기 변경 */
+      height: 420px;
+    }
+    .overlay {
+      width: 300px;
+      height: 420px;
+    }
+    .card {
+      width: 300px;
+      height: 420px;
+    }
+  }
+
+  #music-control {
+    display: block;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+  }
+  #music-control:hover {
+    background-color: #0056b3;
+  }
+
+</style>
