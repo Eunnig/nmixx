@@ -1,0 +1,79 @@
+<div class="container">
+  <div class="overlay"></div>
+  <div class="card"></div>
+</div>
+
+<script>
+  var container = document.querySelector('.container');
+  var overlay = document.querySelector('.overlay');
+
+  function updateCardEffect(x, y) {
+    var rect = container.getBoundingClientRect();
+    var width = rect.width;
+    var height = rect.height;
+
+    var rotateY = -1 / 5 * x + 20;
+    var rotateX = 4 / 30 * y - 20;
+
+  // 흰색 조명 추가 줄은 맘에 안듬
+
+    overlay.style = `
+      background: radial-gradient(circle at ${x}px ${y}px, rgba(255, 255, 255, 0.6), transparent 60%); 
+      filter: brightness(1.2);
+    `;
+
+    container.style = `
+      transform: perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg);
+    `;
+  }
+
+  
+  container.addEventListener('mousemove', function (e) {
+    var rect = container.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    var y = e.clientY - rect.top;
+    updateCardEffect(x, y);
+  });
+
+  // 내가 추가한 모바일 인식
+
+  container.addEventListener('touchmove', function (e) {
+    var rect = container.getBoundingClientRect();
+    var touch = e.touches[0];
+    var x = touch.clientX - rect.left;
+    var y = touch.clientY - rect.top;
+    updateCardEffect(x, y);
+  });
+
+  function resetCardEffect() {
+    overlay.style = 'background: none;';
+    container.style = 'transform: perspective(350px) rotateY(0deg) rotateX(0deg)';
+  }
+
+  container.addEventListener('mouseout', resetCardEffect);
+  container.addEventListener('touchend', resetCardEffect);
+</script>
+
+<style>
+  .container {
+    width: 220px;
+    height: 310px;
+    transition: all 0.1s;
+    position: relative;
+    touch-action: none;
+  }
+  .overlay {
+    position: absolute;
+    width: 220px;
+    height: 310px;
+    background: none; 
+    transition: all 0.1s;
+    pointer-events: none; 
+  }
+  .card {
+    width: 220px;
+    height: 310px;
+    background-image: url(dsdsd.jpg);
+    background-size: cover;
+  }
+</style>
